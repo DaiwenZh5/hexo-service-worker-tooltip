@@ -22,7 +22,7 @@ jobs:
         node-version: 10.x
     - name: 安装项目
       run: |
-        npm c
+        npm i
         npm run build
     - name: 发布
       env:
