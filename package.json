@@ -12,10 +12,8 @@
     "build:tpl": "cp src/templates/sw-precache.tpl lib/templates",
     "build:lib": "babel src --out-dir lib",
     "build": "npm run clean && npm run build:lib && npm run build:tpljs && npm run build:tpl",
-    "lint": "fecs src/lib",
-    "test": "npm run lint && cross-env NODE_ENV=test nyc tap test/**/*.test.js",
     "coverage": "nyc report",
-    "prepublish": "npm run test && npm run build"
+    "prepublish": "npm run build"
   },
   "dependencies": {
     "sw-precache": "^5.1.0"
@@ -37,5 +35,4 @@
   "peerDependencies": {
     "hexo": "^3.2.2"
   },
-  "pre-commit": "build"
 }
