@@ -33,7 +33,6 @@ jobs:
       with:
         release-branches: '["main"]'
         release-assets: |
-          ./lib
-          package.json
+          ${{github.repository}}.tar.gz
        
    
