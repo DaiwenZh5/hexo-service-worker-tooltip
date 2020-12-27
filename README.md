@@ -1,27 +1,41 @@
-# hexo-service-worker
+# hexo-service-worker-tooltip
 
-[![npm version](https://img.shields.io/npm/v/hexo-service-worker.svg?style=flat-square)](https://www.npmjs.com/package/hexo-servcie-worker)
-[![Build Status](https://img.shields.io/travis/lavas-project/hexo-service-worker.svg?style=flat-square)](https://travis-ci.org/lavas-project/hexo-service-worker)
-
-hexo-service-worker 是一个 [hexo](https://hexo.io) 用来让博客拥有 Service Worker 功能的插件，能够默认的把站点中 public 内的所有静态资源包括 html 文件缓存起来，达到离线可访问的效果
-
-> 感谢 [hexo-offline](https://github.com/JLHwung/hexo-offline) 插件的实践，hexo-service-worker 参考了部分实现。hexo-service-worker 同样也是采用 sw-precache 方式来做缓存策略的，`_config.yml` 的配置项和 sw-precache 以及 hexo-offline 几乎保持一致。
+> 本项目是基于 [hexo-service-worker](https://github.com/zoumiaojiang/hexo-service-worker) 实现的，主要用于解决在使用过程遇到的一些问题。
 
 ## 安装
 
 ```bash
-npm i hexo-service-worker --save
+npm i git+https://github.com/DaiwenZh5/hexo-service-worker-tooltip#1.0.0 --save
 ```
-
-Once installed, run `hexo clean && hexo generate` to activate plugin.
 
 ## 用法
 
 安装插件后，直接配置 `_config.yml` 文件如下就可以了：
+主要添加了 `withUpdate` 属性，用于自定义更新提示（原来的内置样式不喜欢）。
+其他的和原插件配置一样。
+但是此处需要手动在 `index.html` （或其他布局文件中）手动引入 `sw.js` 文件 (原插件是自动注入的，但我这边没有生效，public 输出正常，但 hexo server 运行时加载不到，本着所见即所得的原则，我就认为自动注入失败了)，如：
+```ejs
+<!-- index.ejs中 -->
+<%- js(['sw-register.js']) %>
+```
+
 
 ```yaml
 # offline config passed to sw-precache.
 service_worker:
+  # 指定网站检测到更新后的动作，不要引号
+  # js(xxx), xxx 为一行压缩后的脚本
+  withUpdate: js(alter(更新成功!);)
+  # 默认为执行一段内置脚本
+  # 也可以指定路径
+  # withUpdate: path/xxx.js, 该文件打包时会进行语法检测
+  # 但脚本最终时嵌入页面的，所以存在变量未定义的情况，
+  # 为了防止输出异常信息，在文件内部没使用 "`"包裹脚本内容
+  # 如：xxx.js 内
+  # `
+  # do something
+  # `
+  # 最终会去除 "`"
   maximumFileSizeToCacheInBytes: 5242880
   staticFileGlobs:
   - public/**/*.{js,html,css,png,jpg,gif,svg,eot,ttf,woff,woff2}

@@ -40,12 +40,34 @@ function versionGenerator() {
 }
 
 export default function () {
+    const withUpdate = this.config.service_worker.withUpdate;
+    let tooltipContent;
+    // 当配置更新脚本时， 且为 js 指令时
+    if (withUpdate && /(^js\()/.test(withUpdate)) {
+        
+            tooltipContent = withUpdate.substring(3, withUpdate.length - 1);
+    }
+    // 脚本内容为空时，表示配置了路径
+    if (!tooltipContent) {
+        // 获取提示脚本路径
+        let tooltipPath = withUpdate ?
+            path.resolve(__dirname, "../../../", withUpdate) :
+            path.resolve(__dirname, 'templates', 'tooltip.js');
+        // 读取脚本内容
+        tooltipContent = fs.readFileSync(tooltipPath, "utf-8");
+        // 当脚本内容使用 `` 包围时，去除符号
+        if (/(^"`)|(`"$)/.test) {
+            tooltipContent = tooltipContent.substring(1, tooltipContent.length - 1);
+        }
+    }
+
     let swRegisterTemplatePath = path.resolve(__dirname, 'templates', 'sw-register.tpl.js');
     let swRegisterTempleteCon = fs.readFileSync(swRegisterTemplatePath, 'utf-8');
     let swRegisterCon = swRegisterTempleteCon
         .replace('__ServiceWorkerName__', SW_FILE_NAME)
         .replace('__BuildVersion__', versionGenerator())
-        ;
+        .replace('__ToolTipFunction__', tooltipContent);
+    ;
 
     let swRegisterDistPath = path.resolve(this.public_dir, 'sw-register.js');
 

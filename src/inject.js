@@ -6,8 +6,7 @@
 import fs from 'fs';
 import path from 'path';
 
-let injectScriptCon = fs.readFileSync(path.join(__dirname, 'templates', 'inject.tpl.js'), 'utf-8');
-let injectScript = `<script async>${injectScriptCon}</script>`;
+let injectScript = `<script data-inject src="/register.js?v${Date.now()}"></script>`;
 
 export default function inject(publicDir) {
 
@@ -20,10 +19,11 @@ export default function inject(publicDir) {
                 let fileContent = fs.readFileSync(indexHTMLPath, 'utf-8').toString();
 
                 // if it has not been injected before
-                if (!fileContent.includes(`${injectScript}</body></html>`)) {
+                if (!fileContent.includes(`${injectScript}\n</body></html>`)) {
                     let injectedContent
-                        = fileContent.replace(/<\/body>\s*<\/html>\s*$/, `${injectScript}</body></html>`);
-                    fs.writeFileSync(indexHTMLPath, injectedContent);
+                        = fileContent.replace(/<\/body>\s*<\/html>\s*$/, `${injectScript}\n</body></html>`);
+                        // todo: 取消写入 sw-register.js，hexo server 时不生效
+                    // fs.writeFileSync(indexHTMLPath, injectedContent);
                 }
             }
         }
