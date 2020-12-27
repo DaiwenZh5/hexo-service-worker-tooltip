@@ -25,7 +25,7 @@ jobs:
         npm i
         npm run build
     - name: 打包项目
-      run: tar czvf ${{github.repository}}.tar.gz ./lib/* package.json
+      run: tar czvf hexo-service-worker-tooltip.tar.gz ./lib/* package.json
     - name: 发布
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
@@ -33,6 +33,6 @@ jobs:
       with:
         release-branches: '["main"]'
         release-assets: |
-          ${{github.repository}}.tar.gz
+          hexo-service-worker-tooltip.tar.gz
        
    
