@@ -24,6 +24,8 @@ jobs:
       run: |
         npm i
         npm run build
+    - name: 打包项目
+      run: tar czvf ${{github.repository}}.tar.gz ./lib/* package.json
     - name: 发布
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
