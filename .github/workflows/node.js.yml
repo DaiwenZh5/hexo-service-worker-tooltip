@@ -14,8 +14,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - env:
-        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
     - name: 检查更新
       uses: actions/checkout@v2
     - name: 设置 node 环境
@@ -27,6 +25,8 @@ jobs:
         npm ci
         npm run build
     - name: 发布
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
       uses: ridedott/release-me-action@v2.2.64
       with:
         release-assets: |
